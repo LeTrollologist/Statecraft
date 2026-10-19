@@ -2,7 +2,7 @@
 
 A live in-game editor for **Suzerain** (Sordland base game and the Rizia DLC). Press **F1**, change a value, and it applies immediately, with no save editing and no reload. Built as a BepInEx plugin.
 
-> Single-player only. Back up your saves first. Not affiliated with Torpor Games. Use at your own risk; achievement behaviour while cheating is untested.
+> Back up your saves first. Not affiliated with Torpor Games. Use at your own risk; achievement behaviour while cheating is untested.
 
 ## What it does
 
