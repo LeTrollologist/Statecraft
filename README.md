@@ -14,6 +14,10 @@ A live in-game editor for **Suzerain** (Sordland base game and the Rizia DLC). P
 - **All vars** tab: browse and edit any of the roughly 12,800 game variables.
 - **Lua console** and **Auto-scan** (writes `suzerain_diagnostic.txt`) for digging around.
 
+## Screenshots
+
+<img width="1033" height="698" alt="image" src="https://github.com/user-attachments/assets/f14313b8-c0b6-41f5-b4cb-0847756d78fa" />
+
 ## How it works
 
 Suzerain keeps its state in the Pixel Crushers Dialogue System's Lua `Variable` table (keys like `BaseGame.GovernmentBudget` and `RiziaDLC.Resources_Authority`). The plugin reads and writes that table directly. After a Set it reads the value back and shows `before -> after` in the status bar.
