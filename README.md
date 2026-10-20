@@ -98,4 +98,4 @@ Delete `SuzerainTrainer.dll` from `BepInEx\plugins\`. To remove BepInEx entirely
 
 ## Credits
 
-BepInEx, Il2CppInterop and Cpp2IL by their respective authors. Suzerain by Torpor Games. The Dialogue System is by Pixel Crushers.
+BepInEx, Il2CppInterop and Cpp2IL by their respective authors. Suzerain by Torpor Games. The Dialogue System is by Pixel Crushers. [SubstantialSky7326](https://www.reddit.com/user/SubstantialSky7326/) for the [guide](https://www.reddit.com/r/suzerain/comments/1ft4tjv/all_suzerain_cheats_20/).
