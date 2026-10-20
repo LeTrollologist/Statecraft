@@ -1,101 +1,230 @@
-# Suzerain Trainer
+<div align="center">
 
-A live in-game editor for **Suzerain** (Sordland base game and the Rizia DLC). Press **F1**, change a value, and it applies immediately, with no save editing and no reload. Built as a BepInEx plugin.
+# 🎛️ Suzerain Trainer
 
-> Back up your saves first. Not affiliated with Torpor Games. Use at your own risk; achievement behaviour while cheating is untested.
+### *Live In-Game Editor for Suzerain*
 
-## What it does
+**Live Edits • Persistent Locks • Presets • Undo • Auto-Backup**
 
-- In-game overlay (F1 to show or hide, drag the title bar to move it).
-- **Sordland** and **Rizia** tabs with the commonly edited values: budget, wealth, unrest, opinions, relations, military, diplomacy, houses, religions, story flags and more.
-- Per-row **Set**, **-/+** steppers and **Lock**. Lock re-applies a value 4 times a second, so the game can't push it back.
-- Bulk buttons: **Fill recommended**, **Set all shown**, **Set + lock shown**, **Unlock shown**, **Unlock all**.
-- Filter box on every tab.
-- **All vars** tab: browse and edit any of the roughly 12,800 game variables.
-- **Lua console** and **Auto-scan** (writes `suzerain_diagnostic.txt`) for digging around.
+[![Release](https://img.shields.io/badge/Release-v1.0.0-6366F1?style=for-the-badge&logo=github&logoColor=white&labelColor=0f172a)](https://github.com/LeTrollologist/SuzerainTrainer/releases) [![Loader](https://img.shields.io/badge/Loader-BepInEx_6_IL2CPP-8B5CF6?style=for-the-badge&logo=unity&logoColor=white&labelColor=0f172a)](https://builds.bepinex.dev/projects/bepinex_be) [![Tested](https://img.shields.io/badge/Tested-Unity_6000.3.9f1-22C55E?style=for-the-badge&logo=unity&logoColor=white&labelColor=0f172a)](#known-limitations) [![Mode](https://img.shields.io/badge/Mode-Single--Player_Only-F59E0B?style=for-the-badge&logo=steam&logoColor=white&labelColor=0f172a)](SECURITY.md)
+
+[![Windows x86_64](https://img.shields.io/badge/Target-Windows_x86__64-0078D4?style=flat-square&logo=windows&logoColor=white&labelColor=0f172a)](#quickstart-install-in-minutes) [![.NET 6](https://img.shields.io/badge/Plugin-C%23_%2F_.NET_6-512BD4?style=flat-square&logo=dotnet&logoColor=white&labelColor=0f172a)](#developer-experience--tooling) [![Game](https://img.shields.io/badge/Game-Sordland_%2B_Rizia_DLC-DC2626?style=flat-square&logoColor=white&labelColor=0f172a)](#overlay-at-a-glance) [![Source](https://img.shields.io/badge/Distribution-Source_Only-64748B?style=flat-square&logoColor=white&labelColor=0f172a)](#source-code--whats-not-included)
+
+[![Quickstart](https://img.shields.io/badge/%E2%9A%A1_Quickstart-Install_in_Minutes-38BDF8?style=for-the-badge&logoColor=white&labelColor=0f172a)](#quickstart-install-in-minutes) [![Guide](https://img.shields.io/badge/%F0%9F%93%96_Guide-Using_the_Overlay-818CF8?style=for-the-badge&logoColor=white&labelColor=0f172a)](#using-the-overlay) [![Security](https://img.shields.io/badge/%F0%9F%9B%A1%EF%B8%8F_Security-Policy_%26_Safety-34D399?style=for-the-badge&logoColor=white&labelColor=0f172a)](SECURITY.md) [![Contributing](https://img.shields.io/badge/%F0%9F%A4%9D_Contributing-Guidelines-F472B6?style=for-the-badge&logoColor=white&labelColor=0f172a)](CONTRIBUTING.md)
 
 ## Screenshots
 
 <img width="1033" height="698" alt="image" src="https://github.com/user-attachments/assets/f14313b8-c0b6-41f5-b4cb-0847756d78fa" />
 
-## How it works
+</div>
 
-Suzerain keeps its state in the Pixel Crushers Dialogue System's Lua `Variable` table (keys like `BaseGame.GovernmentBudget` and `RiziaDLC.Resources_Authority`). The plugin reads and writes that table directly. After a Set it reads the value back and shows `before -> after` in the status bar.
+---
 
-The HUD only redraws on its own events, so a value can be changed while the top bar still shows the old number. End the turn or reopen a screen to see it update.
+> **Single-player only.** The plugin backs up your newest save before your first edit each session, but keep your own copy of anything you care about. Not affiliated with Torpor Games. Use at your own risk. Whether edited runs still earn achievements is untested.
 
-## Requirements
+## Core Features
 
-- Suzerain on Steam, tested on Unity **6000.3.9f1** (IL2CPP, metadata v39).
-- **BepInEx 6 IL2CPP win-x64**, build **be.789** or newer: <https://builds.bepinex.dev/projects/bepinex_be>
-- **.NET SDK 6.0 or newer** to build the plugin.
-- A few GB of free RAM and page file (see Troubleshooting).
+1. **Live Edits, No Reload**
+Press **F1** and change budget, wealth, unrest, opinions, relations, military, diplomacy, houses, religions and story flags for Sordland and Rizia. Every Set reads the value back and shows `before -> after` in the status bar.
 
-## Install
+2. **Persistent Locks**
+Tick **Lock** and the value is re-applied every 0.25 s in a single batched Lua call. Locks are saved to disk and restored the next time you start the game. Locking only touches variables that already exist, so it is safe at the main menu.
 
-1. Download `BepInEx-Unity.IL2CPP-win-x64-6.0.0-be.<build>.zip` and extract it **next to `Suzerain.exe`**, so `winhttp.dll` and the `BepInEx` folder sit beside it.
-2. Launch the game once and wait. The first run generates interop files and can take a few minutes. Close the game after it reaches the menu.
-3. Open `BepInEx\config\BepInEx.cfg` and set:
-   ```
-   [Logging]
-   UnityLogListening = false
-   ```
-   This avoids a known Unity 6 crash.
-4. Check that `BepInEx\interop\Assembly-CSharp.dll` exists.
-5. Build the plugin (edit `GameDir` in `SuzerainTrainer.csproj` first if your game isn't in the default Steam path):
+3. **Only Raise / Only Lower Protection**
+Bulk actions never make a value worse. Setting a target of 100 leaves your 6,150 manpower alone, and "unrest 0" never raises unrest.
+
+4. **Presets and One-Click Macros**
+Save your locks or your changed edit boxes under a name and re-apply them any time. Six built-in macros ship in the box, such as *Rizia: rich*, *Rizia: war ready* and *Sordland: stable country*.
+
+5. **Undo and Auto-Backup**
+**Undo last** and **Undo all** revert everything changed this session. Your newest save is copied to `TrainerBackups` before the first edit, keeping the last 10.
+
+6. **Favorites and the Full Variable Table**
+Browse and edit any of the roughly 12,800 game variables with typed controls, and pin the ones you care about to a **Favorites** tab.
+
+7. **Built-In Diagnostics**
+A **Lua console**, an **Auto-scan** report and a **Types** explorer (search the game's classes and list their members) are included for modders and troubleshooting.
+
+---
+
+## Overlay at a Glance
+
+| Tab | What it's for |
+|---|---|
+| **Sordland** | Base-game economy, politics, relations, prologue and military flags |
+| **Rizia** | DLC economy, military, welfare, diplomacy and council values |
+| **Favorites** | Variables you pinned from All vars |
+| **All vars** | Every game variable, filterable, with typed controls |
+| **Presets** | Built-in macros, your saved presets, manual save backup |
+| **Types** | Search game classes and list methods (writes `suzerain_types.txt`) |
+| **Lua console** | Run Lua, dump variables, run **Auto-scan** |
+
+How it works: Suzerain keeps its state in the Pixel Crushers Dialogue System's Lua `Variable` table (keys such as `BaseGame.GovernmentBudget` and `RiziaDLC.Resources_Authority`). The plugin reads and writes that table directly. The HUD only redraws on its own events, so a value can change while the top bar still shows the old number. End the turn or reopen a screen to see it update.
+
+---
+
+## Quickstart (Install in Minutes)
+
+**Requirements:** Suzerain on Steam (tested on Unity **6000.3.9f1**, IL2CPP), **BepInEx 6 IL2CPP win-x64** build be.789 or newer (the script fetches it), and the **.NET SDK 6.0+**. Keep a few GB of free RAM and page file; see [Troubleshooting](#troubleshooting).
+
+### 1. Easy Install (`install.ps1`)
+
+```
+powershell -ExecutionPolicy Bypass -File .\install.ps1
+```
+
+Add `-GameDir "D:\path\to\Suzerain"` if the game is not in the default Steam folder.
+
+- **Stage 1** installs BepInEx and presets `UnityLogListening = false`. Launch Suzerain once, wait for the main menu, and close it.
+- **Stage 2** (run the same command again) builds the plugin and copies it into `BepInEx\plugins`.
+
+```
+# Remove the plugin later
+powershell -ExecutionPolicy Bypass -File .\install.ps1 -Uninstall
+```
+
+### 2. Manual Install
+
+1. Extract `BepInEx-Unity.IL2CPP-win-x64-6.0.0-be.789...zip` from [builds.bepinex.dev](https://builds.bepinex.dev/projects/bepinex_be) next to `Suzerain.exe`.
+2. Launch once and close. Set `UnityLogListening = false` under `[Logging]` in `BepInEx\config\BepInEx.cfg` (avoids a known Unity 6 crash).
+3. Confirm `BepInEx\interop\Assembly-CSharp.dll` exists.
+4. Edit `GameDir` in `SuzerainTrainer.csproj` if needed, then:
    ```
    dotnet build -c Release
    ```
-6. Copy `bin\Release\net6.0\SuzerainTrainer.dll` into `BepInEx\plugins\`.
-7. Launch, load a save, press **F1**, then click **Refresh**.
+5. Copy `bin\Release\net6.0\SuzerainTrainer.dll` into `BepInEx\plugins\`.
 
-## Usage
+Then launch, load a save, press **F1**, and click **Refresh**.
+
+---
+
+## Using the Overlay
 
 | Control | What it does |
 |---|---|
-| **F1** | Show or hide the overlay (works while the game window is focused) |
-| Drag title bar | Move the window |
-| **Refresh** | Re-read current values from the game (do this after loading a save) |
-| **Set** | Write the value in the box. Highlighted when it differs from the current value |
+| **F1** | Show or hide (works while the game is focused; rebindable) |
+| Title bar | Drag to move the window |
+| **A- / A+** | Make the overlay smaller or larger |
+| **Refresh** | Re-read every variable. Do this after loading a save |
+| **Set** | Write the box value. Highlighted when it differs from the current value |
 | **- / +** | Step the box by 1 (10 for large values) |
-| **Lock** | Hold the value; re-applied 4 times a second |
-| **Fill recommended** | Fill the boxes with suggested values (not applied until you press Set) |
-| **Set all shown / Set + lock shown** | Apply every visible row, optionally locking it |
-| **Unlock shown / Unlock all** | Release locks |
-| **Dump file** | Write all variables to `suzerain_variables.txt` in the game folder |
-| **Auto-scan** | Probe the Lua environment and write `suzerain_diagnostic.txt` |
+| **Lock** | Hold the value. Persists across sessions |
+| **Fill recommended** | Fill the boxes with suggested values (applied only when you press Set) |
+| **Set all shown / Set + lock shown** | Apply every visible row, honouring the filter and *Only raise / only lower* |
+| **Undo last / Undo all** | Revert changes made this session |
+| **Fav** (All vars) | Pin a variable to the Favorites tab |
+| **Back up save now** (Presets) | Copy your newest save to `TrainerBackups` immediately |
+| **Auto-scan** (Lua console) | Report on the Lua environment and curated keys (writes `suzerain_diagnostic.txt`) |
 
 Tips:
+
 - Load a save first. Variables don't exist at the main menu.
-- Rows that show `n/a in save` aren't in your current save yet, usually because you haven't reached that part of the story.
-- Some values have in-game caps (the notes column lists the ones I know). Going past them can cause odd behaviour.
-- Rows can be recalculated by the game every turn. Use Lock for anything that keeps reverting.
+- Rows showing `n/a in save` aren't in your current save yet.
+- An orange input box means the value is above a cap quoted by community guides. It is a warning, not a block, and some caps are out of date.
+- The game may recalculate some values each turn. Lock anything that keeps reverting.
 
-## Troubleshooting
+### Settings
 
-- **Game crashes while loading a save, with "Could not allocate memory" in `Player.log`:** the machine ran out of memory. Close other programs, make sure Windows manages the page file, and try again. BepInEx adds some overhead.
-- **Crash on first launch with BepInEx:** make sure `UnityLogListening = false` is set.
-- **F1 does nothing:** check `BepInEx\LogOutput.log` for the `[stage N]` lines. If it stops at stage 2 or 3, the plugin loaded but Unity isn't calling it; paste the log in an issue.
-- **Refresh shows 0 loaded or a bulk dump error:** the curated rows still load. Run **Auto-scan** and check the report.
-- **Value changes but the HUD doesn't:** the HUD refreshes on its own events. End the turn or open and close a panel.
-- **`Albin_Convinced` / `Gloria_Convinced` rows show n/a:** the real variable names may carry a prefix. Use the All vars tab and filter by `convinc`, `albin` or `gloria`.
+Edit `BepInEx\config\local.suzerain.trainer.cfg` (created on first run):
 
-## Files
+| Setting | Default | Meaning |
+|---|---|---|
+| `ToggleKeyVirtualKeyCode` | 112 (F1) | Windows virtual-key code to show or hide |
+| `UiScale` | 1.0 | Overlay size (0.7 to 2.0) |
+| `BlockClickThrough` | false | Pause the game's UI input while the mouse is over the overlay (beta) |
+| `IntervalSeconds` (Locks) | 0.25 | How often locks are re-applied |
+| `RestoreLocksOnStart` | true | Reload your locks when the game starts |
+| `LiveRefreshSeconds` | 1.0 | How often visible values refresh |
+| `BackupSaveBeforeFirstEdit` | true | Auto-backup before the first edit |
+| `BackupsToKeep` | 10 | Backup files to keep |
+
+Presets, locks and favorites live in `BepInEx\config\SuzerainTrainer\`. Backups go to `...\LocalLow\Torpor Games\Suzerain\TrainerBackups\`.
+
+---
+
+## Workspace Architecture
 
 ```
 SuzerainTrainer/
-  SuzerainTrainer.csproj   build file (set GameDir)
-  Plugin.cs                BepInEx entry point
-  TrainerUI.cs             overlay and Lua access
-  Rows.cs                  the curated variable list (generated)
+├── install.ps1              # Installer / builder / uninstaller (BepInEx + plugin)
+├── SuzerainTrainer.csproj   # Build file (set GameDir)
+├── Plugin.cs                # BepInEx entry point and config bindings
+├── Behaviour.cs             # Thin injected component (forwards Update / OnGUI)
+├── TrainerUI.cs             # All overlay logic: locks, undo, presets UI, polling
+├── LuaApi.cs                # Lua read / write / batch helpers (escaping lives here)
+├── Store.cs                 # Saved state, presets, save backups
+├── Macros.cs                # Built-in one-click macros
+├── Explorer.cs              # Type explorer and optional click blocking
+├── Rows.cs                  # Curated variable list (key, label, direction, cap)
+├── README.md                # This file
+├── CHANGELOG.md             # Release history
+├── SECURITY.md              # Security model, scope and how to report issues
+└── CONTRIBUTING.md          # How to report bugs, build, test and open a PR
 ```
 
-To add your own rows, add an entry to `Rows.cs`: group (`Sordland` or `Rizia`), section, exact variable key, label, whether it's a bool, recommended value and a note.
+---
 
-## Uninstall
+## Developer Experience & Tooling
 
-Delete `SuzerainTrainer.dll` from `BepInEx\plugins\`. To remove BepInEx entirely, delete `winhttp.dll`, `doorstop_config.ini` and the `BepInEx` folder from the game folder.
+### 1. Build From Source
 
-## Credits
+```
+dotnet build -c Release
+```
 
-BepInEx, Il2CppInterop and Cpp2IL by their respective authors. Suzerain by Torpor Games. The Dialogue System is by Pixel Crushers. [SubstantialSky7326](https://www.reddit.com/user/SubstantialSky7326/) for the [guide](https://www.reddit.com/r/suzerain/comments/1ft4tjv/all_suzerain_cheats_20/).
+The build links against `BepInEx\interop\*.dll`, so launch the game once after installing BepInEx first.
+
+### 2. Add or Change Rows
+
+Append to `Rows.cs`: group, section, exact variable key, label, bool?, recommended value, note, direction (`+1` raise, `-1` lower, `0` exact) and cap (or `double.NaN`). Run **Auto-scan** to confirm the key exists in a real save.
+
+### 3. Read the Log
+
+`BepInEx\LogOutput.log` carries numbered stages: stage 3 means Unity is calling the plugin, stage 6 means the overlay drew a full frame. Every Set is logged with its `before -> after`.
+
+### 4. Uninstall
+
+Delete `SuzerainTrainer.dll` from `BepInEx\plugins\`, or run `install.ps1 -Uninstall`. To remove BepInEx too, delete `winhttp.dll`, `doorstop_config.ini` and the `BepInEx` folder from the game folder.
+
+---
+
+## Source Code & What's Not Included
+
+This repository is **source-only**. There is no prebuilt `SuzerainTrainer.dll` checked in.
+
+- **The plugin source is complete.** Every file needed to build the plugin is here, and `install.ps1` builds it in one step.
+- **Why you build it yourself:** the plugin compiles against the `BepInEx\interop` assemblies that BepInEx generates on *your* machine from *your* copy of Suzerain at first launch. Those files are derived from the game, so they are not shipped or redistributed here, and a build has to match your game and BepInEx versions.
+- **No game content is included:** no Suzerain code, assets, text, dumped metadata or decompiled output. The variable names in `Rows.cs` are plain identifiers that the game itself exposes.
+- **BepInEx is not bundled.** `install.ps1` downloads the official build from `builds.bepinex.dev`.
+- **Release builds, if any:** a DLL attached to a Release was built against Unity 6000.3.9f1 and the BepInEx build named in the release notes. After a game or BepInEx update, rebuild from source. Building it yourself is the recommended way to verify what you are running (see [SECURITY.md](SECURITY.md)).
+
+---
+
+## Known Limitations
+
+- **HUD refresh:** values are written correctly but the HUD updates on its own schedule. The **Types** tab exists to help find the game's refresh method; it isn't wired up yet.
+- **UI scaling** changes IMGUI font sizes at runtime. If it misbehaves, set `UiScale = 1.0`; the plugin disables scaling by itself if the font calls fail.
+- **Block clicks** is experimental and off by default.
+- `Albin_Convinced` and `Gloria_Convinced` may show `n/a`. Their real names depend on your save: filter **All vars** by `convinc`, `albin` or `gloria`.
+- Backups copy the newest save on disk, which may be older than what is currently in memory.
+- Tested on one game build (Unity 6000.3.9f1). A game update can change variable names or break the build.
+
+---
+
+## Troubleshooting
+
+- **Crash on first launch with BepInEx:** set `UnityLogListening = false`.
+- **Crash while loading a save, "Could not allocate memory" in `Player.log`:** Windows ran out of memory. Close other programs and make sure Windows manages the page file.
+- **F1 does nothing:** check `BepInEx\LogOutput.log` for the `[stage N]` lines.
+- **Refresh reports a bulk dump error:** the curated rows still work. Run **Auto-scan** and read the report.
+- **Value changes but the HUD doesn't:** the HUD refreshes on its own events. End the turn or open and close a panel.
+- **Build errors:** make sure `BepInEx\interop` exists (launch the game once after installing BepInEx) and that `GameDir` is correct. Paste the first few error lines in an issue.
+
+---
+
+## Security, Contributing & Credits
+
+- 🛡️ Read the [Security Policy](SECURITY.md) for what the plugin does and doesn't do, which files it writes, and how to report a vulnerability privately.
+- 🤝 Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening an issue or pull request.
+- BepInEx, Il2CppInterop and Cpp2IL are by their authors. Suzerain is by Torpor Games. The Dialogue System is by Pixel Crushers.
+- [SubstantialSky7326](https://www.reddit.com/user/SubstantialSky7326/) for the [guide](https://www.reddit.com/r/suzerain/comments/1ft4tjv/all_suzerain_cheats_20/).
