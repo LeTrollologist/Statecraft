@@ -20,7 +20,7 @@
 
 ---
 
-> **Single-player only.** The plugin backs up your newest save before your first edit each session, but keep your own copy of anything you care about. Not affiliated with Torpor Games. Use at your own risk. Whether edited runs still earn achievements is untested.
+> **Single-player only.** The plugin backs up your newest save before your first edit each session, but keep your own copy of anything you care about. Not affiliated with Torpor Games. Use at your own risk. Achievements still work while using this program, if you have issues with cheating, do not use it.
 
 ## Core Features
 
